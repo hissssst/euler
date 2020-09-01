@@ -1,0 +1,16 @@
+<section class="phx-hero">
+  <h2>INN Verification</h2>
+
+  <form phx-submit="inn_verification">
+    <input type="text" name="inn_input"/>
+  </form>
+</section>
+<div id="verifications" phx-update="prepend">
+  <%= for verification <- @verifications do %>
+    <p id="verification_<%= verification.inserted_at %>_<%= verification.input %>">
+      <span>[<%= verification.inserted_at %>] </span>
+      <span><%= verification.input %>:</span>
+      <%= verification.result %>
+    </p>
+  <% end %>
+</div>
