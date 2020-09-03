@@ -6,7 +6,6 @@ defmodule EulerWeb.PageLive do
 
   use EulerWeb, :live_view
 
-  alias Euler.INNVerification
   alias Phoenix.PubSub
 
   require Logger
@@ -15,7 +14,7 @@ defmodule EulerWeb.PageLive do
   def mount(_params, _session, socket) do
     :ok = PubSub.subscribe(Euler.PubSub, "clients")
     verifications =
-      INNVerification.latest(20)
+      Euler.latest(20)
       |> Enum.map(&Map.from_struct/1)
     socket = assign(socket, verifications: verifications)
     {:ok, socket, temporary_assigns: [verifications: []]}
@@ -23,7 +22,7 @@ defmodule EulerWeb.PageLive do
 
   @impl true
   def handle_event("inn_verification", %{"inn_input" => input}, socket) do
-    case INNVerification.verify(input) do
+    case Euler.verify(input) do
       {:ok, verification} ->
         verification
         |> Map.from_struct()
@@ -38,11 +37,7 @@ defmodule EulerWeb.PageLive do
 
   @impl true
   def handle_info({:new_verification, verification}, socket) do
-    socket =
-      socket
-      |> assign(verifications: [verification])
-
-    {:noreply, socket}
+    {:noreply, assign(socket, verifications: [verification])}
   end
 
   @spec notify_clients(any()) :: :ok

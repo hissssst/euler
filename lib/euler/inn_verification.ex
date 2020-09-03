@@ -1,38 +1,24 @@
 defmodule Euler.INNVerification do
 
   @moduledoc """
-  Main application logic here
+  Just verifies INN
   """
 
-  alias Euler.Verification
-  alias Euler.Repo
+  @type t :: %{input: String.t(), result: boolean()}
 
   @ten_coef     [2, 4, 10, 3, 5, 9, 4, 6, 8]
   @twelve_coef1 [7, 2, 4, 10, 3, 5, 9, 4, 6, 8]
   @twelve_coef2 [3, 7, 2, 4, 10, 3, 5, 9, 4, 6, 8]
 
-  @spec latest(pos_integer()) :: [Verification.t()]
-  def latest(n) do
-    Verification.latest(n)
-    |> Repo.all
-  end
-
-  @spec verify(String.t()) :: {:ok, Verification.t()} | {:error, Ecto.Changeset.t()}
+  @spec verify(String.t()) :: t()
   def verify(inn_string) do
-    inn_string
-    |> just_verify()
-    |> Verification.create_changeset()
-    |> Repo.insert()
-  end
-
-  @spec just_verify(String.t()) :: Map.t()
-  def just_verify(inn_string) do
-    with {:ok, inn} <- parse(inn_string) do
-      do_verify(inn)
-    end
-    |> case do
-      {:ok, true} -> %{input: inn_string, result: true}
-      _           -> %{input: inn_string, result: false}
+    with(
+      {:ok, inn} <- parse(inn_string),
+      {:ok, true} <- do_verify(inn)
+    )do
+      %{input: inn_string, result: true}
+    else
+      _ -> %{input: inn_string, result: false}
     end
   end
 

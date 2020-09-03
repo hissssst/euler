@@ -11,21 +11,21 @@ defmodule Euler.INNVerificationTest do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Euler.Repo)
   end
 
-  test "just verifications" do
+  test "Verification without storing data into database" do
     Enum.map(@good_inputs, fn input ->
-      assert %{result: true} = INNVerification.just_verify(input)
+      assert %{result: true} = INNVerification.verify(input)
     end)
     Enum.map(@bad_inputs, fn input ->
-      assert %{result: true} != INNVerification.just_verify(input)
+      assert %{result: true} != INNVerification.verify(input)
     end)
   end
 
-  test "verifications" do
+  test "Verifications with database" do
     Enum.map(@good_inputs, fn input ->
-      assert {:ok, %{result: true}} = INNVerification.verify(input)
+      assert {:ok, %{result: true}} = Euler.verify(input)
     end)
     Enum.map(@bad_inputs, fn input ->
-      assert {:ok, %{result: true}} != INNVerification.just_verify(input)
+      assert {:ok, %{result: true}} != Euler.verify(input)
     end)
   end
 end
