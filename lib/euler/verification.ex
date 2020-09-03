@@ -16,8 +16,8 @@ defmodule Euler.Verification do
   end
 
   @type t :: %__MODULE__{
-    input: String.t(),
-    result: boolean(),
+    input:       String.t(),
+    result:      boolean(),
     inserted_at: DateTime.t()
   }
 

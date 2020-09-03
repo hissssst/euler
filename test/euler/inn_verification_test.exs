@@ -6,7 +6,6 @@ defmodule Euler.INNVerificationTest do
   @bad_inputs ["123412312", "xasdca1234123"]
   @good_inputs ["500100732259", "7830002293"]
 
-
   setup do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Euler.Repo)
   end

@@ -9,6 +9,7 @@ defmodule Euler do
 
   alias Euler.Verification
   alias Euler.INNVerification
+  alias Euler.Cache
   alias Euler.Repo
 
   @spec latest(pos_integer()) :: [Verification.t()]
@@ -23,9 +24,19 @@ defmodule Euler do
   @spec verify(String.t()) :: {:ok, Verification.t()} | {:error, Ecto.Changeset.t()}
   def verify(inn_string) do
     inn_string
-    |> INNVerification.verify()
+    |> get_verified()
     |> Verification.create_changeset()
     |> Repo.insert()
+  end
+
+  @spec get_verified(String.t()) :: INNVerification.t()
+  defp get_verified(inn_string) do
+    inn_string
+    |> Cache.get_lazy(fn -> INNVerification.verify(inn_string) end)
+    |> case do
+      {:ok, value} -> value
+      _ -> INNVerification.verify(inn_string)
+    end
   end
 
 end

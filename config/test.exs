@@ -20,3 +20,8 @@ config :euler, EulerWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+config :euler, Euler.Cache,
+  cache_timeout: 10,
+  host: "localhost",
+  password: "hello"

@@ -73,3 +73,8 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :euler, Euler.Cache,
+  cache_timeout: 10,
+  host: "localhost",
+  password: "hello"

@@ -22,7 +22,10 @@ defmodule EulerWeb.PageLive do
 
   @impl true
   def handle_event("inn_verification", %{"inn_input" => input}, socket) do
-    case Euler.verify(input) do
+    input
+    |> trim() # Чтобы не было особенно длинных строк в системе
+    |> Euler.verify()
+    |> case do
       {:ok, verification} ->
         verification
         |> Map.from_struct()
@@ -40,9 +43,16 @@ defmodule EulerWeb.PageLive do
     {:noreply, assign(socket, verifications: [verification])}
   end
 
+  # Helpers
+
   @spec notify_clients(any()) :: :ok
   defp notify_clients(verification) do
     :ok = PubSub.broadcast(Euler.PubSub, "clients", {:new_verification, verification})
+  end
+
+  @spec trim(String.t()) :: String.t()
+  defp trim(inn_string) do
+    String.slice(inn_string, 0, 255)
   end
 
 end
