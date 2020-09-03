@@ -15,7 +15,13 @@ defmodule Euler.Verification do
     timestamps updated_at: false
   end
 
-  @spec create_changeset(Map.t()) :: Ecto.Changeset.t()
+  @type t :: %__MODULE__{
+    input: String.t(),
+    result: boolean(),
+    inserted_at: DateTime.t()
+  }
+
+  @spec create_changeset(map()) :: Ecto.Changeset.t()
   def create_changeset(params) do
     %__MODULE__{}
     |> cast(params, ~w[input result]a)
